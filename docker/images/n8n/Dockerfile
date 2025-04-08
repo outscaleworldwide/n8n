@@ -43,6 +43,8 @@ RUN \
 
 COPY docker-entrypoint.sh /
 
+RUN chmod +x /docker-entrypoint.sh
+
 RUN \
 	mkdir .n8n && \
 	chown node:node .n8n
