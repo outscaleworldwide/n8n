@@ -1,13 +1,14 @@
-#!/bin/sh
-if [ -d /opt/custom-certificates ]; then
-  echo "Trusting custom certificates from /opt/custom-certificates."
-  export NODE_OPTIONS="--use-openssl-ca $NODE_OPTIONS"
-  export SSL_CERT_DIR=/opt/custom-certificates
-  c_rehash /opt/custom-certificates
-fi
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
-if [ "$#" -gt 0 ]; then
-  exec n8n "$@"
-else
-  exec n8n
-fi
+# ✅ Make sure the entrypoint script is executable!
+RUN chmod +x /docker-entrypoint.sh
+
+RUN \
+  mkdir /home/node/.n8n && \
+  chown node:node /home/node/.n8n
+
+ENV SHELL /bin/sh
+USER node
+
+ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
+
