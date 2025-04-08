@@ -13,6 +13,7 @@ LABEL org.opencontainers.image.version=${N8N_VERSION}
 ENV N8N_VERSION=${N8N_VERSION}
 ENV NODE_ENV=production
 ENV N8N_RELEASE_TYPE=stable
+
 RUN set -eux; \
 	npm install -g --omit=dev n8n@${N8N_VERSION} --ignore-scripts && \
 	npm rebuild --prefix=/usr/local/lib/node_modules/n8n sqlite3 && \
@@ -22,6 +23,7 @@ RUN set -eux; \
 	find /usr/local/lib/node_modules/n8n -type f -name "*.ts" -o -name "*.js.map" -o -name "*.vue" | xargs rm -f && \
 	rm -rf /root/.npm
 
+# Setup the Task Runner Launcher
 ARG TARGETPLATFORM
 ARG LAUNCHER_VERSION=1.1.1
 COPY n8n-task-runners.json /etc/n8n-task-runners.json
@@ -39,7 +41,14 @@ RUN \
 	rm -r /launcher-temp
 
 COPY docker-entrypoint.sh /
-RUN mkdir .n8n && chown node:node .n8n
+
+# 🛠️ THIS IS THE FIX — Makes docker-entrypoint.sh executable
+RUN chmod +x /docker-entrypoint.sh
+
+RUN \
+	mkdir .n8n && \
+	chown node:node .n8n
+
 ENV SHELL /bin/sh
 USER node
 ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
