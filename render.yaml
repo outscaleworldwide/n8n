@@ -7,5 +7,4 @@ services:
     plan: free
     dockerfilePath: ./Dockerfile
     buildCommand: ""
-    startCommand: "n8n start"
     autoDeploy: true
