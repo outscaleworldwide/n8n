@@ -1,0 +1,8 @@
+{
+  "taskRunners": [
+    {
+      "name": "default",
+      "tasks": ["default"]
+    }
+  ]
+}
