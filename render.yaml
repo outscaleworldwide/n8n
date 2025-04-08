@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: n8n
+    env: docker
+    repo: https://github.com/outscaleworldwide/n8n
+    region: oregon
+    plan: free
+    dockerfilePath: ./Dockerfile
+    buildCommand: ""
+    startCommand: "n8n start"
+    autoDeploy: true
